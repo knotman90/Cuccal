@@ -10,6 +10,7 @@
 
 
 //proto functions defined by user in config.cpp
+extern void callback(unsigned int);
 extern void gpuEvolve(CA_GPU* d_CA);
 extern void copyBoard(CA_GPU* d_CA);
 extern bool stopCondition();
@@ -32,7 +33,6 @@ int main() {
 	CA.addSubstate(Q_NEW,BOOL);
 
 
-
 	CA.registerElementaryProcess(gpuEvolve);
 	CA.registerElementaryProcess(copyBoard);
 	CA.registerStopCondictionCallback(stopCondition);
@@ -40,14 +40,14 @@ int main() {
 	CA.setBlockDimY(16);
 	CA.setBlockdimX(16);
 
-
+	CA.setStepsBetweenCopy(50);
+	CA.setCallback(callback);
 
 
 	if(CA.loadSubstate(Q,"./data/GOL/GOL_400x400.sst")==ERROR_OPENING_FILE){
 		printDebug("ERROR opening file");
 		return -1;
 	}
-
 
 	if(CA.saveSubstate(Q,"./Q_original.sst")==ERROR_OPENING_FILE){
 			printDebug("ERROR SAVING");

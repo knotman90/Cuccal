@@ -468,11 +468,19 @@ void CA::globalTransitionFunction_MAINLOOP(){
 
 
 		}
-		printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+		//printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
 
 		steps=steps+1;
 		printf("Step = %i\n",steps);
 		stop=stopCondition();
+
+		//callback each
+		if(steps%stepsBetweenCallback==0){
+			//callback occurs
+			callback(steps);
+
+		}
+
 	}
 
 	/*-----------------------------------------------------------------------------------*/
@@ -497,8 +505,12 @@ void CA::registerElementaryProcess( void(*callback)(CA_GPU* d_CA ) ){
 	elementaryProcesses_count++;
 }
 
+
 void CA::setInitialParameters(unsigned int substates_size,unsigned int transitionFunction_size){
-	assert(substates_size >=0 && transitionFunction_size > 0);
+	/**
+	 * substates_size = The number of substates of the automaton
+	 * transitionFunction_size = The number of transition functions
+	 * */
 	this->substates_size=substates_size;
 	this->elementaryProcesses_size=transitionFunction_size;
 }
@@ -721,6 +733,17 @@ void CA::setBlockDimY(unsigned int dimY) {
 	updateDimGrid();
 }
 
+unsigned int CA::getStepsBetweenCopy() const {
+	return stepsBetweenCallback;
+}
+
+
+
+
+
+void CA::setStepsBetweenCopy(unsigned int stepsBetweenCopy) {
+	this->stepsBetweenCallback = stepsBetweenCopy;
+}
 
 unsigned int CA::isPowerOfTwo (unsigned int x)
 {
@@ -742,5 +765,8 @@ void CA::copyBuffersFromGPU(){
 	printDebug("END offload copy");
 }
 
+void CA::setCallback(void(*call)(unsigned int)){
+	this->callback=call;
+}
 
 

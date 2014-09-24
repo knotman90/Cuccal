@@ -15,13 +15,44 @@
 
 #include "config.h"
 #include "CA.cuh"
+#include <cstring>
+#include <iostream>
 
 
 
 //CA dichiarata in CA.h
 extern CA CA;
 
+void callback(unsigned int currentsteps){
+	char path[20];
+	sprintf(path, "Q_%d.sst", currentsteps);
+	CA.copyBufferFromGPU(CA.substates[Q],CA.d_subPointer[Q],CA.substateTypes[Q]);
+	CA.saveSubstate(Q,path);
+}
 
+
+
+//mod 2 automaton
+//__global__ void gpuEvolve(CA_GPU* d_CA){
+//	unsigned int col=(threadIdx.x+blockIdx.x*blockDim.x);
+//	unsigned int row=(threadIdx.y+blockIdx.y*blockDim.y);
+//	unsigned int totRows=d_CA->scalars->rows;
+//	unsigned int totCols=d_CA->scalars->cols;
+//	if(row<totRows && col<totCols){
+//		short unsigned int count=0;
+//		unsigned int linNeighIdx=0;
+//		bool alive=d_CA->getSubstateValue_BOOL(Q,row,col);
+//		for (int neigh = 1; neigh < 9; neigh++) {
+//			linNeighIdx=d_CA->getNeighborIndex_MOORE_Toroidal(row,col,neigh,totRows,totCols);
+//			if(d_CA->getSubstateValue_BOOL(Q,linNeighIdx)==true){
+//				count++;
+//			}
+//		}
+//		alive=alive%2==0 ? true : false;
+//		d_CA->setSubstateValue_BOOL(Q_NEW,row,col,alive);
+//	}
+//
+//}
 
 __global__ void gpuEvolve(CA_GPU* d_CA){
 	unsigned int col=(threadIdx.x+blockIdx.x*blockDim.x);

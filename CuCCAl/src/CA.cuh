@@ -41,9 +41,6 @@ __device__ __host__ static unsigned int inline mod (int m, int n){
 
 /*END UTILITY CA FUNCTION*/
 
-
-
-
 struct CA{
 	//HAndle to the gpu structure but pointer on GPU
 	CA_GPU* d_CA_TOCOPY;
@@ -56,11 +53,12 @@ struct CA{
 
 
 	//VARIABLES----------------------------------------------
-
+	void(*callback)(unsigned int);
+	unsigned int stepsBetweenCallback;
 	unsigned long long int steps;
 	//flags
 	bool isToroidal;
-	 unsigned int(* getLinearIndex)(unsigned int , unsigned int,unsigned int , unsigned int );
+	unsigned int(* getLinearIndex)(unsigned int , unsigned int,unsigned int , unsigned int );
 	/*Dimension CA*/
 	unsigned int rows;
 	unsigned int cols;
@@ -191,7 +189,9 @@ struct CA{
 	void updateDimGrid();
 
 	unsigned int isPowerOfTwo (unsigned int x);
-
+	unsigned int getStepsBetweenCopy() const;
+	void setStepsBetweenCopy(unsigned int stepsBetweenCopy);
+	void setCallback(void(*)(unsigned int));
 
 };
 
