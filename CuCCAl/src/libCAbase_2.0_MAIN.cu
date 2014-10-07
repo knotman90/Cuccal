@@ -7,6 +7,8 @@
 //============================================================================
 
 #include "CA.cuh"
+#include "CAGLVisualizer.h"
+#include <pthread.h>
 
 
 //proto functions defined by user in config.cpp
@@ -15,15 +17,23 @@ extern void gpuEvolve(CA_GPU* d_CA);
 extern void copyBoard(CA_GPU* d_CA);
 extern bool stopCondition();
 
+extern void initializeVisualizer(int argc, char** argv);
+extern void renderFunction();
+
 
 
 CA CA(401,401,true);
 
 
 
-int main() {
+int main(int argc, char **argv) {
+
 	/*--------START CONFIGURATION AND INITIALIZATION PHASE--------*/
 
+	CThread* visualizer= new CAGLVisualizer(argc, argv);
+	((CAGLVisualizer*)visualizer)->setInitializeCallback(initializeVisualizer);
+	((CAGLVisualizer*)visualizer)->setRenderCallBack(renderFunction);
+	visualizer->Start();
 
 
 	CA.setInitialParameters(2,2);
@@ -40,7 +50,7 @@ int main() {
 	CA.setBlockDimY(16);
 	CA.setBlockdimX(16);
 
-	CA.setStepsBetweenCopy(50);
+	CA.setStepsBetweenCopy(67);
 	CA.setCallback(callback);
 
 
@@ -50,8 +60,8 @@ int main() {
 	}
 
 	if(CA.saveSubstate(Q,"./Q_original.sst")==ERROR_OPENING_FILE){
-			printDebug("ERROR SAVING");
-		}
+		printDebug("ERROR SAVING");
+	}
 
 	CA.initializeGPUAutomata();
 
@@ -73,7 +83,7 @@ int main() {
 
 
 
-
+visualizer->Join();
 	CA.cleanup();
 	printf("\nElapsed Time = %.5f \nEND",CA.elapsedTime);
 

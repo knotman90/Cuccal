@@ -453,15 +453,12 @@ void CA::globalTransitionFunction_MAINLOOP(){
 
 	/*------------------------------------------------------------------------------*/
 
-	unsigned int i=0;
-	unsigned int j=0;
 	unsigned int k=0;
 	while(!stop){
 		//for each elementary process
 		for(k=0;k<elementaryProcesses_size;k++){
 			//printf("elementaryProcess -> %i\n",k);
 			//loops over all cells of the cellular automata
-
 
 			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
 			cudaThreadSynchronize();
