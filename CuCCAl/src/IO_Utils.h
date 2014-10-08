@@ -12,7 +12,7 @@
 
 
 
-#include "CA.cuh"
+#include "CA2D.cuh"
 #include <fstream>
 using std::fstream;
 

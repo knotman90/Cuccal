@@ -13,13 +13,13 @@
 #include "enums.h"
 #include <vector_types.h>//cuda dim3 include
 
-struct CA;
+struct CA2D;
 
 
-struct SCALARS_CA_GPU{
+struct SCALARS_CA_GPU2D{
 	/*Dimension CA*/
-	unsigned int rows;
-	unsigned int cols;
+	unsigned int yDim;
+	unsigned int xDim;
 	unsigned int numCells;
 
 	unsigned long long int steps;
@@ -31,10 +31,10 @@ struct SCALARS_CA_GPU{
 	bool stop;
 };
 
-struct CA_GPU{
+struct CA_GPU2D{
 	//VARIABLES----------------------------------------------
 
-	SCALARS_CA_GPU* scalars;
+	SCALARS_CA_GPU2D* scalars;
 
 
 	//flags

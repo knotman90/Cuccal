@@ -16,37 +16,43 @@
 #include "config.h"
 #include "debugUtilities.h"
 #include "IO_Utils.h"
-#include "CA_GPU.cuh"
+#include "CA2D_GPU.cuh"
 #include <time.h>
 #include <vector_types.h>//cuda dim3 include
 
 #define DEFAULT_BLOCKDIM_X (8)
 #define DEFAULT_BLOCKDIM_Y (8)
+#define DEFAULT_BLOCKDIM_Z (8)
 
 /*STATIC AND UTILITY CA FUNCTIONS*/
 __device__ __host__ static unsigned int inline mod (int m, int n){
 	return m >= 0 ? m % n : ( n - abs( m%n ) ) % n;
 }
 
- __device__ __host__ inline unsigned   int getLinearIndexToroidal(unsigned int i, unsigned int j,unsigned int rows, unsigned int cols){
+__device__ __host__ inline unsigned   int getLinearIndexToroidal2D(unsigned int i, unsigned int j,unsigned int rows, unsigned int cols){
 	return (mod(i,rows)*cols+mod(j,cols));
 }
 
- __device__ __host__ inline unsigned  int getLinearIndexNormal(unsigned int i, unsigned int j, unsigned int rows,unsigned int cols){
+__device__ __host__ inline unsigned  int getLinearIndexNormal2D(unsigned int i, unsigned int j, unsigned int rows,unsigned int cols){
 	return (i*cols+j);
 }
 
 
 
 
+
+
 /*END UTILITY CA FUNCTION*/
 
-struct CA{
+
+
+
+struct CA2D{
 	//HAndle to the gpu structure but pointer on GPU
-	CA_GPU* d_CA_TOCOPY;
+	CA_GPU2D* d_CA_TOCOPY;
 	void** d_subPointer;//handle(CPU) to GPU allocated substates(for cleanup)
 	//HANDLE TO THE GPU STRUCTURE!
-	CA_GPU* d_CA;
+	CA_GPU2D* d_CA;
 	//launch configuration parameters
 	dim3 blockDim;
 	dim3 dimGrid;
@@ -59,10 +65,15 @@ struct CA{
 	//flags
 	bool isToroidal;
 	unsigned int(* getLinearIndex)(unsigned int , unsigned int,unsigned int , unsigned int );
+
 	/*Dimension CA*/
-	unsigned int rows;
-	unsigned int cols;
-	unsigned int numCells;
+	unsigned int xDim;
+	unsigned int yDim;
+
+
+
+
+	unsigned int numCells;//2D=(yDim*xDim) 3D=(x*y*z);
 
 	/*SUBSTATES list.*/
 	void** substates;
@@ -74,7 +85,7 @@ struct CA{
 	/*Transition Function
 	 * elementary processes make-up the transition function
 	 * They will be executed in order from 0->elementaryProcesses_size*/
-	void  (** elementaryProcesses)(CA_GPU* d_CA);
+	void  (** elementaryProcesses)(CA_GPU2D* d_CA);
 	unsigned int elementaryProcesses_size;
 	unsigned int elementaryProcesses_count;
 
@@ -112,50 +123,52 @@ struct CA{
 
 	/* START GET SUBSTATE FAMILY FUNCTION*/
 	/*2D COORDINATE FUNCTIONS*/
-	 bool getSubstateValue_BOOL(unsigned int substate,unsigned int i, unsigned int j) const;
-	 double getSubstateValue_DOUBLE(unsigned int substate,unsigned int i, unsigned int j) const;
-	 float getSubstateValue_FLOAT(unsigned int substate,unsigned int i, unsigned int j)const;
-	 int getSubstateValue_INT(unsigned int substate,unsigned int i, unsigned int j)const;
-	 char getSubstateValue_CHAR(unsigned int substate,unsigned int i, unsigned int j)const;
+	bool getSubstateValue_BOOL(unsigned int substate,unsigned int i, unsigned int j) const;
+	double getSubstateValue_DOUBLE(unsigned int substate,unsigned int i, unsigned int j) const;
+	float getSubstateValue_FLOAT(unsigned int substate,unsigned int i, unsigned int j)const;
+	int getSubstateValue_INT(unsigned int substate,unsigned int i, unsigned int j)const;
+	char getSubstateValue_CHAR(unsigned int substate,unsigned int i, unsigned int j)const;
 
 	//-----LINEARIZED COORDINATE FUNCTIONS
 
-	 bool getSubstateValue_BOOL(unsigned int substate,unsigned int index) const;
-	 double getSubstateValue_DOUBLE(unsigned int substate,unsigned int index) const;
-	 float getSubstateValue_FLOAT(unsigned int substate,unsigned int index)const;
-	 int getSubstateValue_INT(unsigned int substate,unsigned int index)const;
-	 char getSubstateValue_CHAR(unsigned int substate,unsigned int index)const;
+	bool getSubstateValue_BOOL(unsigned int substate,unsigned int index) const;
+	double getSubstateValue_DOUBLE(unsigned int substate,unsigned int index) const;
+	float getSubstateValue_FLOAT(unsigned int substate,unsigned int index)const;
+	int getSubstateValue_INT(unsigned int substate,unsigned int index)const;
+	char getSubstateValue_CHAR(unsigned int substate,unsigned int index)const;
 
 
 	/* END GET SUBSTATE VALUE FAMILY*/
 
 	/* START SET SUBSTATE FAMILY FUNCTION*/
-	 void setSubstateValue_BOOL(unsigned int substate,unsigned int i, unsigned int j,bool const value);
-	 void setSubstateValue_DOUBLE(unsigned int substate,unsigned int i, unsigned int j,double const value);
-	 void setSubstateValue_FLOAT(unsigned int substate,unsigned int i, unsigned int j, float const value);
-	 void setSubstateValue_INT(unsigned int substate,unsigned int i, unsigned int j,int const value);
-	 void setSubstateValue_CHAR(unsigned int substate,unsigned int i, unsigned int j,char const value);
+	void setSubstateValue2D_BOOL(unsigned int substate,unsigned int i, unsigned int j,bool const value);
+	void setSubstateValue2D_DOUBLE(unsigned int substate,unsigned int i, unsigned int j,double const value);
+	void setSubstateValue2D_FLOAT(unsigned int substate,unsigned int i, unsigned int j, float const value);
+	void setSubstateValue2D_INT(unsigned int substate,unsigned int i, unsigned int j,int const value);
+	void setSubstateValue2D_CHAR(unsigned int substate,unsigned int i, unsigned int j,char const value);
 
 	//LINEARIXED COORDINATE FUNCTIONS
-	 void setSubstateValue_BOOL(unsigned int substate,unsigned int index,bool const value);
-	 void setSubstateValue_DOUBLE(unsigned int substate,unsigned int index,double const value);
-	 void setSubstateValue_FLOAT(unsigned int substate,unsigned int index, float const value);
-	 void setSubstateValue_INT(unsigned int substate,unsigned int index,int const value);
-	 void setSubstateValue_CHAR(unsigned int substate,unsigned int index,char const value);
+	void setSubstateValue_BOOL(unsigned int substate,unsigned int index,bool const value);
+	void setSubstateValue_DOUBLE(unsigned int substate,unsigned int index,double const value);
+	void setSubstateValue_FLOAT(unsigned int substate,unsigned int index, float const value);
+	void setSubstateValue_INT(unsigned int substate,unsigned int index,int const value);
+	void setSubstateValue_CHAR(unsigned int substate,unsigned int index,char const value);
 
 
 	/* END set SUBSTATE VALUE FAMILY*/
 
 
-	unsigned int getNeighborIndex_MOORE(unsigned int i, unsigned int j,unsigned int neighbor);
-	unsigned int getNeighborIndex_MOORE(unsigned int index,unsigned int neighbor);
+	unsigned int getNeighborIndex2D_MOORE(unsigned int i, unsigned int j,unsigned int neighbor);
+	unsigned int getNeighborIndex2D_MOORE(unsigned int index,unsigned int neighbor);
+
+
 
 
 	void registerStopCondictionCallback(bool(*stopCondition)());
 
 	void globalTransitionFunction();
 
-	void registerElementaryProcess( void(*callback)(CA_GPU*) );
+	void registerElementaryProcess( void(*callback)(CA_GPU2D*) );
 
 	void setInitialParameters(unsigned int substates_size,unsigned int transitionFunction_size);
 	void initialize();
@@ -169,12 +182,18 @@ struct CA{
 	void* allocateSubstate(TYPE t,void* buffer);
 
 
-	CA(int rows,int cols,bool toroidal);
+	//2D constructor
+	CA2D(int XDim,int YDim,bool toroidal);
+	void preliminaryCAConstructor();
+
+	CA2D(int XDim,int YDim,int ZDim,bool toroidal);
 
 	//getter and setter
-	unsigned int getCols() const;
+	unsigned int get_xDim() const;
+	unsigned int get_yDim() const;
+	unsigned int get_zDim() const;
+
 	unsigned int getElementaryProcessesSize() const;
-	unsigned int getRows() const;
 	unsigned int getSubstatesSize() const;
 	unsigned long long int getSteps() const;
 

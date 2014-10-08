@@ -30,7 +30,7 @@ void CA_load_substate_FILE(fstream& f, type* const Q,unsigned int rows,unsigned 
 
 	for (int i=0; i<rows; i++){
 		for (int j=0; j<cols; j++){
-			f >> Q[getLinearIndexNormal(i,j,rows,cols)];
+			f >> Q[getLinearIndexNormal2D(i,j,rows,cols)];
 		}
 	}
 
@@ -58,7 +58,7 @@ void CA_save_substate_FILE(fstream& f, const type* const Q,unsigned int rows,uns
 
 	for (int i=0; i<rows; i++) {
 		for (int j=0; j<cols; j++) {
-			f << Q[getLinearIndexNormal(i,j,rows,cols)] << " ";
+			f << Q[getLinearIndexNormal2D(i,j,rows,cols)] << " ";
 		}
 		f << "\n";
 	}
