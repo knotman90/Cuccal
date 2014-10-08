@@ -98,9 +98,7 @@ __global__ void initializeDCA(void** d_AllocatedpointerSubstates,TYPE* d_substat
 
 __global__ void printValues(CA_GPU3D* d_CA){
 
-	//printf("(%i,%i),(%i,%i)\n",((int*)d_CA->d_substates[0])[threadIdx.x],d_CA->d_substateTypes[0],((int*)d_CA->d_substates[1])[threadIdx.x],d_CA->d_substateTypes[1]);
-	//d_CA->d_substates=d_AllocatedpointerSubstates;
-	//printf("SCALARS\n yDim=%i, xDim=%i value=%i",d_CA->scalars->yDim,d_CA->scalars->xDim,d_CA->getSubstateValue_INT(Q,threadIdx.x));
+	printf("SCALARS\n yDim=%i, xDim=%i , zDim=%i\n ",d_CA->scalars->yDim,d_CA->scalars->xDim,d_CA->scalars->zDim);
 
 
 }
@@ -156,6 +154,7 @@ void CA3D::initializeGPUAutomata(){
 	SCALARS_CA_GPU3D* scalars_TOPCOPY = new SCALARS_CA_GPU3D();
 	scalars_TOPCOPY->xDim=xDim;
 	scalars_TOPCOPY->yDim=yDim;
+	scalars_TOPCOPY->zDim=zDim;
 	scalars_TOPCOPY->stop=stop;
 	scalars_TOPCOPY->steps=steps;
 	scalars_TOPCOPY->isToroidal=isToroidal;

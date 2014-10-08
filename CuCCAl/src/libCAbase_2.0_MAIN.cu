@@ -125,24 +125,14 @@ int CA3DMain(int argc, char **argv){
 
 
 
-//
-//	if(CA.loadSubstate(Q,"./data/GOL/GOL_400x400.sst")==ERROR_OPENING_FILE){
-//		printDebug("ERROR opening file");
-//		return -1;
-//	}
-//
-//	if(CA.saveSubstate(Q,"./Q_original.sst")==ERROR_OPENING_FILE){
-//		printDebug("ERROR SAVING");
-//	}
-//
-//	CA.initializeGPUAutomata();
+	CA_3D.initializeGPUAutomata();
 //
 //
 //	/*--------END CONFIGURATION AND INITIALIZATION PHASE--------*/
 //	CA.globalTransitionFunction();
 //
 //	CA.copyBuffersFromGPU();
-//	CA.cleanUpGPUAutomata();
+	CA.cleanUpGPUAutomata();
 //	//CA.printSubstate_STDOUT(Q);
 //	//CA.printSubstate_STDOUT(Q_NEW);
 //
@@ -156,7 +146,7 @@ int CA3DMain(int argc, char **argv){
 //
 //
 //	visualizer->Join();
-//	CA.cleanup();
+	CA.cleanup();
 	printf("\nElapsed Time = %.5f \nEND",CA.elapsedTime);
 
 }
