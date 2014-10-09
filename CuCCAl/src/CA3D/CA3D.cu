@@ -108,25 +108,6 @@ void CA3D::initializeGPUAutomata(){
 	CUDA_CHECK_RETURN(cudaMalloc(&d_CA,sizeof(CA_GPU3D)));
 	d_CA_TOCOPY= new CA_GPU3D();
 
-	//cancellaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-	//		for(int i=0;i<yDim;i++){
-	//			for(int j=0;j<xDim;j++){
-	//				if(i%substates[Q]==0){
-	//					((bool*)substates[Q])[getLinearIndexNormal(i,j,yDim,xDim)]=true;
-	//				((bool*)substates[Q_NEW])[getLinearIndexNormal(i,j,yDim,xDim)]=false;
-	//			}
-	//		}
-	//		}
-	//glider
-	//	((bool*)substates[Q])[getLinearIndexNormal(5,5,yDim,xDim)]=true;
-	//	((bool*)substates[Q])[getLinearIndexNormal(6,5,yDim,xDim)]=true;
-	//	((bool*)substates[Q])[getLinearIndexNormal(5,6,yDim,xDim)]=true;
-	//	((bool*)substates[Q])[getLinearIndexNormal(6,6,yDim,xDim)]=true;
-	//
-	//	((bool*)substates[Q])[getLinearIndexNormal(7,7,yDim,xDim)]=true;
-	//	((bool*)substates[Q])[getLinearIndexNormal(8,7,yDim,xDim)]=true;
-	//	((bool*)substates[Q])[getLinearIndexNormal(7,8,yDim,xDim)]=true;
-	//	((bool*)substates[Q])[getLinearIndexNormal(8,8,yDim,xDim)]=true;
 
 	//allocate memory ON GPU
 
@@ -186,6 +167,7 @@ void CA3D::cleanUpGPUAutomata(){
 		CUDA_CHECK_RETURN(cudaFree((void*)((d_subPointer[i]))));
 
 	}
+
 	//free scalars GPU
 	CUDA_CHECK_RETURN(cudaFree((void*)d_CA_TOCOPY->scalars));
 	//CUDA_CHECK_RETURN(cudaFree(d_CA));
@@ -198,7 +180,7 @@ unsigned long long int CA3D::getSteps() const{
 }
 
 unsigned int CA3D::getToroidalLinearIndex(unsigned int linearIndex){
-	return mod(linearIndex,yDim*xDim);
+	return hd_mod(linearIndex,yDim*xDim);
 }
 
 int CA3D::loadSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFile){
@@ -206,19 +188,19 @@ int CA3D::loadSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFil
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
 	case FLOAT:
-		status=CA_load_substate_FILE(pathToFile,(float*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE3D(pathToFile,(float*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case DOUBLE:
-		status=CA_load_substate_FILE(pathToFile,(double*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE3D(pathToFile,(double*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case CHAR:
-		status=CA_load_substate_FILE(pathToFile,(char*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE3D(pathToFile,(char*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case INT:
-		status=CA_load_substate_FILE(pathToFile,(int*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE3D(pathToFile,(int*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case BOOL:
-		status=CA_load_substate_FILE(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE3D(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	}
 	return status;
@@ -229,19 +211,19 @@ int CA3D::saveSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFil
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
 	case FLOAT:
-		status=CA_save_substate_FILE(pathToFile,(float*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE3D(pathToFile,(float*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case DOUBLE:
-		status=CA_save_substate_FILE(pathToFile,(double*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE3D(pathToFile,(double*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case CHAR:
-		status=CA_save_substate_FILE(pathToFile,(char*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE3D(pathToFile,(char*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case INT:
-		status=CA_save_substate_FILE(pathToFile,(int*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE3D(pathToFile,(int*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 	case BOOL:
-		status=CA_save_substate_FILE(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE3D(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim,zDim);
 		break;
 
 	}
@@ -251,29 +233,29 @@ int CA3D::saveSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFil
 
 
 void CA3D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel){
-	printSubstate_STDOUT(substateLabel,yDim,xDim);
+	printSubstate_STDOUT(substateLabel,yDim,xDim,zDim);
 
 }
 
-void CA3D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int Nrow, unsigned int Ncol){
-	assert(Nrow<=yDim && Ncol<=xDim );
+void CA3D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int YDim, unsigned int XDim, unsigned int ZDim){
+	assert(YDim<=yDim && XDim<=xDim );
 
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
 	case FLOAT:
-		CA_print_STDOUT((float*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT3D((float*)(substates[substateLabel]),YDim,XDim,ZDim);
 		break;
 	case DOUBLE:
-		CA_print_STDOUT((double*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT3D((double*)(substates[substateLabel]),YDim,XDim,ZDim);
 		break;
 	case CHAR:
-		CA_print_STDOUT((char*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT3D((char*)(substates[substateLabel]),YDim,XDim,ZDim);
 		break;
 	case INT:
-		CA_print_STDOUT((int*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT3D((int*)(substates[substateLabel]),YDim,XDim,ZDim);
 		break;
 	case BOOL:
-		CA_print_STDOUT((bool*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT3D((bool*)(substates[substateLabel]),YDim,XDim,ZDim);
 		break;
 
 	}
@@ -589,21 +571,23 @@ void CA3D::updateDimGrid(){
 
 
 
-/*GET i-th NEIGHBOR INDEX functions MOORE NEIGHBORHOOD
-
-	         5 | 1 | 8
-	        ---|---|---
-	         2 | 0 | 3
-	        ---|---|---
-	         6 | 4 | 7
- */
+/*
+48  layer -1 layer 0 layer 1
+49
+50  14 |10 | 17 	 5 | 1 | 8 		23 |19 | 26
+51  ---|---|---     ---|---|--- 	---|---|---
+52  11 | 9 | 12 	 2 | 0 | 3 		20 |18 | 21
+53  ---|---|--- 	---|---|---	 	---|---|---
+54  15 |13 | 16 	 6 | 4 | 7 		24 |22 | 25
+55  */
 unsigned int CA3D::getNeighborIndex3D_MOORE(unsigned int i, unsigned int j,unsigned int k,unsigned int neighbor){
-	assert(neighbor<9);
+	assert(neighbor<27);
 	switch(neighbor){
+	//layer 0
 	case 0:
 		return getLinearIndex(i,j,k,yDim,xDim,zDim);
 	case 1:
-		return getLinearIndex(i,j,k,yDim,xDim,zDim);//one row up
+		return getLinearIndex(i-1,j,k,yDim,xDim,zDim);//one row up
 	case 2:
 		return getLinearIndex(i,j-1,k,yDim,xDim,zDim);//same row one coloumn left
 	case 3:
@@ -618,15 +602,67 @@ unsigned int CA3D::getNeighborIndex3D_MOORE(unsigned int i, unsigned int j,unsig
 		return getLinearIndex(i+1,j+1,k,yDim,xDim,zDim);//row down col right
 	case 8:
 		return getLinearIndex(i-1,j+1,k,yDim,xDim,zDim);//row up col right
+
+		//layer -1 K=k-1
+	case 9:
+		return getLinearIndex(i,j,k-1,yDim,xDim,zDim);
+	case 10:
+		return getLinearIndex(i,j,k-1,yDim,xDim,zDim);//one row up
+	case 11:
+		return getLinearIndex(i,j-1,k-1,yDim,xDim,zDim);//same row one coloumn left
+	case 12:
+		return getLinearIndex(i,j+1,k-1,yDim,xDim,zDim);//same row one coloumn right
+	case 13:
+		return getLinearIndex(i+1,j,k-1,yDim,xDim,zDim);//same column one row down
+	case 14:
+		return getLinearIndex(i-1,j-1,k-1,yDim,xDim,zDim);//one row up one col left
+	case 15:
+		return getLinearIndex(i+1,j-1,k-1,yDim,xDim,zDim);//one row down one col left
+	case 16:
+		return getLinearIndex(i+1,j+1,k-1,yDim,xDim,zDim);//row down col right
+	case 17:
+		return getLinearIndex(i-1,j+1,k-1,yDim,xDim,zDim);//row up col right
+		//layer 1 K=k+1
+	case 18:
+		return getLinearIndex(i,j,k+1,yDim,xDim,zDim);
+	case 19:
+		return getLinearIndex(i,j,k+1,yDim,xDim,zDim);//one row up
+	case 20:
+		return getLinearIndex(i,j-1,k+1,yDim,xDim,zDim);//same row one coloumn left
+	case 21:
+		return getLinearIndex(i,j+1,k+1,yDim,xDim,zDim);//same row one coloumn right
+	case 22:
+		return getLinearIndex(i+1,j,k+1,yDim,xDim,zDim);//same column one row down
+	case 23:
+		return getLinearIndex(i-1,j-1,k+1,yDim,xDim,zDim);//one row up one col left
+	case 24:
+		return getLinearIndex(i+1,j-1,k+1,yDim,xDim,zDim);//one row down one col left
+	case 25:
+		return getLinearIndex(i+1,j+1,k+1,yDim,xDim,zDim);//row down col right
+	case 26:
+		return getLinearIndex(i-1,j+1,k+1,yDim,xDim,zDim);//row up col right
+
 	}
 
 	return NULL;//it should never be executed
 
 
 }
+
+/*
+48  layer -1 layer 0 layer 1
+49
+50  14 |10 | 17 	 5 | 1 | 8 		23 |19 | 26
+51  ---|---|---     ---|---|--- 	---|---|---
+52  11 | 9 | 12 	 2 | 0 | 3 		20 |18 | 21
+53  ---|---|--- 	---|---|---	 	---|---|---
+54  15 |13 | 16 	 6 | 4 | 7 		24 |22 | 25
+55  */
 unsigned int CA3D::getNeighborIndex3D_MOORE(unsigned int index,unsigned int neighbor){
-	assert(neighbor<9);
+	assert(neighbor<27);
+
 	switch(neighbor){
+	//layer 0
 	case 0:
 		return index;
 	case 1:
@@ -645,6 +681,49 @@ unsigned int CA3D::getNeighborIndex3D_MOORE(unsigned int index,unsigned int neig
 		return index+xDim+1;//row down col right
 	case 8:
 		return index-xDim+1;//row up col right
+
+
+		//layer -1
+	case 9:
+		return index + (-(yDim*xDim));
+	case 10:
+		return index-xDim + (-(yDim*xDim));//one row up
+	case 11:
+		return index-1 + (-(yDim*xDim));//same row one coloumn left
+	case 12:
+		return index+1 + (-(yDim*xDim));//same row one coloumn right
+	case 13:
+		return index+xDim + (-(yDim*xDim));//same column one row down
+	case 14:
+		return index-xDim-1 + (-(yDim*xDim));//one row up one col left
+	case 15:
+		return index+xDim-1 + (-(yDim*xDim));//one row down one col left
+	case 16:
+		return index+xDim+1 + (-(yDim*xDim));//row down col right
+	case 17:
+		return index-xDim+1 + (-(yDim*xDim));//row up col right
+
+
+
+		//layer +1
+	case 18:
+		return index + ((yDim*xDim));
+	case 19:
+		return index-xDim + ((yDim*xDim));//one row up
+	case 20:
+		return index-1 + ((yDim*xDim));//same row one coloumn left
+	case 21:
+		return index+1 + ((yDim*xDim));//same row one coloumn right
+	case 22:
+		return index+xDim + ((yDim*xDim));//same column one row down
+	case 23:
+		return index-xDim-1 + ((yDim*xDim));//one row up one col left
+	case 24:
+		return index+xDim-1 + ((yDim*xDim));//one row down one col left
+	case 25:
+		return index+xDim+1 + ((yDim*xDim));//row down col right
+	case 26:
+		return index-xDim+1 + ((yDim*xDim));//row up col right
 	}
 
 	return NULL;//it should never be executed
@@ -779,9 +858,9 @@ CA3D::CA3D(int YDim,int XDim,int ZDim,bool toroidal){
 	this->numCells=yDim*xDim*zDim;
 	this->isToroidal=toroidal;
 	if(isToroidal){
-		getLinearIndex=getLinearIndexToroidal3D;
+		getLinearIndex=hd_getLinearIndexToroidal3D;
 	}else{
-		getLinearIndex=getLinearIndexNormal3D;
+		getLinearIndex=hd_getLinearIndexNormal3D;
 	}
 	blockDim.x=DEFAULT_BLOCKDIM_X;
 	blockDim.y=DEFAULT_BLOCKDIM_Y;

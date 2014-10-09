@@ -9,14 +9,16 @@
 #define CA_H_
 
 #include "enums.h"
-#include <cassert>
-#include <stdio.h>      /* printf, scanf, NULL */
-#include <stdlib.h>     /* malloc, free, rand */
-#include <stdbool.h>
 #include "config.h"
 #include "debugUtilities.h"
 #include "IO_Utils.h"
 #include "CA2D_GPU.cuh"
+#include "memoryLinearizationUtils.cuh"//mod 2/3D to 1D memory layout
+
+#include <cassert>
+#include <stdio.h>      /* printf, scanf, NULL */
+#include <stdlib.h>     /* malloc, free, rand */
+#include <stdbool.h>
 #include <time.h>
 #include <vector_types.h>//cuda dim3 include
 
@@ -24,25 +26,8 @@
 #define DEFAULT_BLOCKDIM_Y (8)
 #define DEFAULT_BLOCKDIM_Z (8)
 
-/*STATIC AND UTILITY CA FUNCTIONS*/
-__device__ __host__ static unsigned int inline mod (int m, int n){
-	return m >= 0 ? m % n : ( n - abs( m%n ) ) % n;
-}
-
-__device__ __host__ inline unsigned   int getLinearIndexToroidal2D(unsigned int i, unsigned int j,unsigned int rows, unsigned int cols){
-	return (mod(i,rows)*cols+mod(j,cols));
-}
-
-__device__ __host__ inline unsigned  int getLinearIndexNormal2D(unsigned int i, unsigned int j, unsigned int rows,unsigned int cols){
-	return (i*cols+j);
-}
 
 
-
-
-
-
-/*END UTILITY CA FUNCTION*/
 
 
 

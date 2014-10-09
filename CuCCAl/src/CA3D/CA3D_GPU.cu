@@ -18,71 +18,94 @@
 
 
 
-/*STATIC AND UTILITY CA FUNCTIONS*/
-__device__  inline unsigned int  CA_GPU3D::d_mod (int m, int n){
-	return m >= 0 ? m % n : ( n - abs( m%n ) ) % n;
-}
-
-
-__device__  inline   unsigned  int CA_GPU3D::d_getLinearIndexToroidal(unsigned int i, unsigned int j,unsigned int k,unsigned int yDim, unsigned int xDim, unsigned int zDim){
-	return (d_mod(k,zDim)*yDim*xDim)+(d_mod(i,yDim)*xDim+d_mod(j,xDim));
-}
-
-__device__ inline   unsigned  int CA_GPU3D::d_getLinearIndexNormal(unsigned int i, unsigned int j,unsigned int k, unsigned int yDim,unsigned int xDim, unsigned int zDim){
-	return (k*yDim*xDim)+(i*xDim+j);
-}
-
-
-
 
 __device__ unsigned int CA_GPU3D::getNeighborIndex_MOORE_Toroidal(unsigned int i, unsigned int j, unsigned int k,unsigned int neighbor,unsigned int yDim, unsigned int xDim, unsigned int zDim){
 	switch(neighbor){
+
 	case 0:
-
-		return d_getLinearIndexToroidal(i,j,k,yDim,xDim,zDim);
+		return hd_getLinearIndexToroidal3D(i,j,k,yDim,xDim,zDim);
 	case 1:
-		return d_getLinearIndexToroidal(i-1,j,k,yDim,xDim,zDim);//one row up
+		return hd_getLinearIndexToroidal3D(i,j,k,yDim,xDim,zDim);//one row up
 	case 2:
-		return d_getLinearIndexToroidal(i,j-1,k,yDim,xDim,zDim);//same row one coloumn left
+		return hd_getLinearIndexToroidal3D(i,j-1,k,yDim,xDim,zDim);//same row one coloumn left
 	case 3:
-		return d_getLinearIndexToroidal(i,j+1,k,yDim,xDim,zDim);//same row one coloumn right
+		return hd_getLinearIndexToroidal3D(i,j+1,k,yDim,xDim,zDim);//same row one coloumn right
 	case 4:
-		return d_getLinearIndexToroidal(i+1,j,k,yDim,xDim,zDim);//same column one row down
+		return hd_getLinearIndexToroidal3D(i+1,j,k,yDim,xDim,zDim);//same column one row down
 	case 5:
-		return d_getLinearIndexToroidal(i-1,j-1,k,yDim,xDim,zDim);//one row up one col left
+		return hd_getLinearIndexToroidal3D(i-1,j-1,k,yDim,xDim,zDim);//one row up one col left
 	case 6:
-		return d_getLinearIndexToroidal(i+1,j-1,k,yDim,xDim,zDim);//one row down one col left
+		return hd_getLinearIndexToroidal3D(i+1,j-1,k,yDim,xDim,zDim);//one row down one col left
 	case 7:
-		return d_getLinearIndexToroidal(i+1,j+1,k,yDim,xDim,zDim);//row down col right
+		return hd_getLinearIndexToroidal3D(i+1,j+1,k,yDim,xDim,zDim);//row down col right
 	case 8:
-		return d_getLinearIndexToroidal(i-1,j+1,k,yDim,xDim,zDim);//row up col right
-	}
+		return hd_getLinearIndexToroidal3D(i-1,j+1,k,yDim,xDim,zDim);//row up col right
 
-	return NULL;//it should never be executed
+		//layer -1 K=k-1
+	case 9:
+		return hd_getLinearIndexToroidal3D(i,j,k-1,yDim,xDim,zDim);
+	case 10:
+		return hd_getLinearIndexToroidal3D(i,j,k-1,yDim,xDim,zDim);//one row up
+	case 11:
+		return hd_getLinearIndexToroidal3D(i,j-1,k-1,yDim,xDim,zDim);//same row one coloumn left
+	case 12:
+		return hd_getLinearIndexToroidal3D(i,j+1,k-1,yDim,xDim,zDim);//same row one coloumn right
+	case 13:
+		return hd_getLinearIndexToroidal3D(i+1,j,k-1,yDim,xDim,zDim);//same column one row down
+	case 14:
+		return hd_getLinearIndexToroidal3D(i-1,j-1,k-1,yDim,xDim,zDim);//one row up one col left
+	case 15:
+		return hd_getLinearIndexToroidal3D(i+1,j-1,k-1,yDim,xDim,zDim);//one row down one col left
+	case 16:
+		return hd_getLinearIndexToroidal3D(i+1,j+1,k-1,yDim,xDim,zDim);//row down col right
+	case 17:
+		return hd_getLinearIndexToroidal3D(i-1,j+1,k-1,yDim,xDim,zDim);//row up col right
+		//layer 1 K=k+1
+	case 18:
+		return hd_getLinearIndexToroidal3D(i,j,k+1,yDim,xDim,zDim);
+	case 19:
+		return hd_getLinearIndexToroidal3D(i,j,k+1,yDim,xDim,zDim);//one row up
+	case 20:
+		return hd_getLinearIndexToroidal3D(i,j-1,k+1,yDim,xDim,zDim);//same row one coloumn left
+	case 21:
+		return hd_getLinearIndexToroidal3D(i,j+1,k+1,yDim,xDim,zDim);//same row one coloumn right
+	case 22:
+		return hd_getLinearIndexToroidal3D(i+1,j,k+1,yDim,xDim,zDim);//same column one row down
+	case 23:
+		return hd_getLinearIndexToroidal3D(i-1,j-1,k+1,yDim,xDim,zDim);//one row up one col left
+	case 24:
+		return hd_getLinearIndexToroidal3D(i+1,j-1,k+1,yDim,xDim,zDim);//one row down one col left
+	case 25:
+		return hd_getLinearIndexToroidal3D(i+1,j+1,k+1,yDim,xDim,zDim);//row down col right
+	case 26:
+		return hd_getLinearIndexToroidal3D(i-1,j+1,k+1,yDim,xDim,zDim);//row up col right
+	}
+	return NULL;
+
 }
 
 
 
 /* ------------------START GET SUBSTATE FAMILY FUNCTION------------------*/
-__device__  bool CA_GPU3D::getSubstateValue_BOOL(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k) const{
-	return ((bool*)d_substates[substateLabel])[getLinearIndex(i,j,k,scalars->yDim,scalars->xDim, scalars->zDim)];
+__device__   bool CA_GPU3D::getSubstateValue_BOOL(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k) const{
+	return ((bool*)d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k,scalars->yDim,scalars->xDim, scalars->zDim)];
 }
 
 __device__ double CA_GPU3D::getSubstateValue_DOUBLE(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
 
-	return ((double*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim, scalars->zDim)];
+	return ((double*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim, scalars->zDim)];
 }
 
 __device__ float CA_GPU3D::getSubstateValue_FLOAT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
-	return ((float*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim, scalars->zDim)];
+	return ((float*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim, scalars->zDim)];
 }
 
 __device__ int CA_GPU3D::getSubstateValue_INT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
-	return ((int*) d_substates[substateLabel])[this->getLinearIndex(i,j, k,scalars->yDim, scalars->xDim, scalars->zDim)];
+	return ((int*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j, k,scalars->yDim, scalars->xDim, scalars->zDim)];
 }
 
 __device__ char CA_GPU3D::getSubstateValue_CHAR(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
-	return ((char*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim, scalars->zDim)];
+	return ((char*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim, scalars->zDim)];
 }
 
 //mono index cell representation
@@ -114,23 +137,23 @@ __device__ char CA_GPU3D::getSubstateValue_CHAR(unsigned int substateLabel,unsig
 
 /* ----------------START SET SUBSTATE FAMILY FUNCTION ------------------*/
 __device__ void CA_GPU3D::setSubstateValue_BOOL(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,bool const value) {
-	((bool*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
+	((bool*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
 }
 
 __device__ void CA_GPU3D::setSubstateValue_DOUBLE(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k, double const value){
-	((double*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
+	((double*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
 }
 
 __device__ void CA_GPU3D::setSubstateValue_FLOAT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,float const value){
-	((float*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
+	((float*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
 }
 
 __device__ void CA_GPU3D::setSubstateValue_INT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,int const value){
-	((int*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
+	((int*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
 }
 
 __device__ void CA_GPU3D::setSubstateValue_CHAR(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,char const value){
-	((char*) d_substates[substateLabel])[getLinearIndex(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
+	((char*) d_substates[substateLabel])[hd_getLinearIndexNormal3D(i,j,k, scalars->yDim, scalars->xDim,scalars->zDim)]=value;
 }
 
 
@@ -159,9 +182,7 @@ __device__ void CA_GPU3D::setSubstateValue_CHAR(unsigned int substateLabel,unsig
 
 
 
-__device__ unsigned int CA_GPU3D::getLinearIndex(unsigned int i, unsigned int j,unsigned int k,unsigned int yDim, unsigned int xDim, unsigned int zDim)const{
-	return (k*yDim*xDim)+(i*xDim+j);
-}
+
 
 
 

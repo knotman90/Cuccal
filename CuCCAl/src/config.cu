@@ -163,7 +163,7 @@ void __global__ copyBoard(CA_GPU2D* d_CA){
 //true means --> STOP THE AUTOMATA
 bool stopCondition(){
 
-	if(CA.getSteps()>10000){
+	if(CA.getSteps()>10){
 		return true;
 	}
 	return false;

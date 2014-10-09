@@ -13,6 +13,7 @@
 #include "../config.h"
 #include "../debugUtilities.h"
 #include "CA3D_GPU.cuh"
+#include "../memoryLinearizationUtils.cuh"//mod 2/3D to 1D memory layout
 
 #include <cassert>
 #include <stdio.h>      /* printf, scanf, NULL */
@@ -24,21 +25,6 @@
 #define DEFAULT_BLOCKDIM_X (8)
 #define DEFAULT_BLOCKDIM_Y (8)
 #define DEFAULT_BLOCKDIM_Z (8)
-
-/*STATIC AND UTILITY CA FUNCTIONS*/
-
-
-__device__ __host__ inline unsigned   int getLinearIndexToroidal3D(unsigned int i, unsigned int j,unsigned int k, unsigned int yDim, unsigned int xDim,unsigned int zDim){
-return (mod(k,zDim)*yDim*xDim)+(mod(i,yDim)*xDim+mod(j,xDim));
-}
-
-__device__ __host__ inline unsigned  int getLinearIndexNormal3D(unsigned int i, unsigned int j,unsigned int k, unsigned int yDim, unsigned int xDim,unsigned int zDim){
-	return (k*yDim*xDim)+(i*xDim+j);
-}
-
-
-/*END UTILITY CA FUNCTION*/
-
 
 
 
@@ -112,7 +98,7 @@ struct CA3D{
 	int saveSubstate(SUBSTATE_LABEL substateLabel,const char* const pathToFile);
 
 	void printSubstate_STDOUT(SUBSTATE_LABEL substateLabel);
-	void printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int row, unsigned int col);
+	void printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int YDim, unsigned int XDim, unsigned int ZDim);
 
 	/* START GET SUBSTATE FAMILY FUNCTION*/
 	/*3D COORDINATE FUNCTIONS*/

@@ -9,6 +9,7 @@
 #define CA_GPU3D_CUH_
 
 #include "../enums.h"
+#include "../memoryLinearizationUtils.cuh"
 #include <vector_types.h>//cuda dim3 include
 
 struct CA3D;
@@ -92,14 +93,6 @@ struct CA_GPU3D{
 	__device__ void setSubstateValue_INT(unsigned int substate,unsigned int index,int const value);
 	__device__ void setSubstateValue_CHAR(unsigned int substate,unsigned int index,char const value);
 
-	__device__ unsigned int getLinearIndex(unsigned int i, unsigned int j,unsigned int k,unsigned int yDim, unsigned int xDim, unsigned int zDim)const;
-
-	//utility functions
-	__device__  inline  unsigned int  d_mod (int m, int n);
-	__device__  inline   unsigned  int d_getLinearIndexToroidal(unsigned int i, unsigned int j,unsigned int k,unsigned int yDim, unsigned int xDim,unsigned int zDim);
-	__device__   inline  unsigned  int d_getLinearIndexNormal(unsigned int i, unsigned int j,unsigned int k, unsigned int yDim,unsigned int xDim,unsigned int zDim);
-
-	__device__  inline   unsigned  int d_getLinearIndexToroidalLinear(unsigned int index,unsigned int yDim, unsigned int xDim,unsigned int zDim);
 
 
 	__device__ unsigned int getNeighborIndex_MOORE_Toroidal(unsigned int i, unsigned int j, unsigned int k,unsigned int neighbor,unsigned int yDim, unsigned int xDim, unsigned int zDim);

@@ -22,22 +22,41 @@ using std::fstream;
 	ERROR_OPENING_FILE,
 	SUCCESS_OPENING_FILE
 };
+//2D IO-functions
+//save/load -> to/from FILES
+template <typename type>
+void CA_load_substate_FILE2D(fstream& f, type* const Q,unsigned int yDim,unsigned int xDim);
+
+template <typename type>
+int CA_load_substate_FILE2D(const char* const path, type*  const Q,unsigned int yDim,unsigned int xDim);
+
+template <typename type>
+void CA_save_substate_FILE2D(fstream& f, const type* const Q,unsigned int yDim,unsigned int xDim);
+
+template <typename type>
+int CA_save_substate_FILE2D(const char* const path, const type* const Q,unsigned int yDim,unsigned int xDim);
+
+template <typename type>
+void CA_print_STDOUT2D(const type* const Q,unsigned int yDim,unsigned int xDim);
+
+
 
 //save/load -> to/from FILES
 template <typename type>
-void CA_load_substate_FILE(fstream& f, type* const Q,unsigned int rows,unsigned int cols);
+void CA_load_substate_FILE3D(fstream& f, type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim);
 
 template <typename type>
-int CA_load_substate_FILE(const char* const path, type*  const Q,unsigned int rows,unsigned int cols);
+int CA_load_substate_FILE3D(const char* const path, type*  const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim);
 
 template <typename type>
-void CA_save_substate_FILE(fstream& f, const type* const Q,unsigned int rows,unsigned int cols);
+void CA_save_substate_FILE3D(fstream& f, const type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim);
 
 template <typename type>
-int CA_save_substate_FILE(const char* const path, const type* const Q,unsigned int rows,unsigned int cols);
+int CA_save_substate_FILE3D(const char* const path, const type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim);
 
 template <typename type>
-void CA_print_STDOUT(const type* const Q,unsigned int rows,unsigned int cols);
+void CA_print_STDOUT3D(const type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim);
+
 
 
 

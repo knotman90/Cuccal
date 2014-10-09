@@ -199,7 +199,7 @@ unsigned long long int CA2D::getSteps() const{
 }
 
 unsigned int CA2D::getToroidalLinearIndex(unsigned int linearIndex){
-	return mod(linearIndex,yDim*xDim);
+	return hd_mod(linearIndex,yDim*xDim);
 }
 
 int CA2D::loadSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFile){
@@ -207,19 +207,19 @@ int CA2D::loadSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFil
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
 	case FLOAT:
-		status=CA_load_substate_FILE(pathToFile,(float*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE2D(pathToFile,(float*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case DOUBLE:
-		status=CA_load_substate_FILE(pathToFile,(double*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE2D(pathToFile,(double*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case CHAR:
-		status=CA_load_substate_FILE(pathToFile,(char*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE2D(pathToFile,(char*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case INT:
-		status=CA_load_substate_FILE(pathToFile,(int*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE2D(pathToFile,(int*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case BOOL:
-		status=CA_load_substate_FILE(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim);
+		status=CA_load_substate_FILE2D(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim);
 		break;
 	}
 	return status;
@@ -230,19 +230,19 @@ int CA2D::saveSubstate(SUBSTATE_LABEL substateLabel, const char* const pathToFil
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
 	case FLOAT:
-		status=CA_save_substate_FILE(pathToFile,(float*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE2D(pathToFile,(float*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case DOUBLE:
-		status=CA_save_substate_FILE(pathToFile,(double*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE2D(pathToFile,(double*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case CHAR:
-		status=CA_save_substate_FILE(pathToFile,(char*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE2D(pathToFile,(char*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case INT:
-		status=CA_save_substate_FILE(pathToFile,(int*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE2D(pathToFile,(int*)(substates[substateLabel]),yDim,xDim);
 		break;
 	case BOOL:
-		status=CA_save_substate_FILE(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim);
+		status=CA_save_substate_FILE2D(pathToFile,(bool*)(substates[substateLabel]),yDim,xDim);
 		break;
 
 	}
@@ -262,19 +262,19 @@ void CA2D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int Nrow,
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
 	case FLOAT:
-		CA_print_STDOUT((float*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT2D((float*)(substates[substateLabel]),Nrow,Ncol);
 		break;
 	case DOUBLE:
-		CA_print_STDOUT((double*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT2D((double*)(substates[substateLabel]),Nrow,Ncol);
 		break;
 	case CHAR:
-		CA_print_STDOUT((char*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT2D((char*)(substates[substateLabel]),Nrow,Ncol);
 		break;
 	case INT:
-		CA_print_STDOUT((int*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT2D((int*)(substates[substateLabel]),Nrow,Ncol);
 		break;
 	case BOOL:
-		CA_print_STDOUT((bool*)(substates[substateLabel]),Nrow,Ncol);
+		CA_print_STDOUT2D((bool*)(substates[substateLabel]),Nrow,Ncol);
 		break;
 
 	}
@@ -596,9 +596,9 @@ CA2D::CA2D(int yDim,int xDim,bool toroidal){
 	this->numCells=yDim*xDim;
 	this->isToroidal=toroidal;
 	if(isToroidal){
-		getLinearIndex=getLinearIndexToroidal2D;
+		getLinearIndex=hd_getLinearIndexToroidal2D;
 	}else{
-		getLinearIndex=getLinearIndexNormal2D;
+		getLinearIndex=hd_getLinearIndexNormal2D;
 	}
 	blockDim.x=DEFAULT_BLOCKDIM_X;
 	blockDim.y=DEFAULT_BLOCKDIM_Y;

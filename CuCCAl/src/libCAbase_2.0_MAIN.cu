@@ -126,27 +126,27 @@ int CA3DMain(int argc, char **argv){
 
 
 	CA_3D.initializeGPUAutomata();
+
+
+	/*--------END CONFIGURATION AND INITIALIZATION PHASE--------*/
+//	CA_3D.globalTransitionFunction();
+
+	//CA_3D.copyBuffersFromGPU();
+	CA_3D.cleanUpGPUAutomata();
+	CA_3D.printSubstate_STDOUT(Q);
+//	//CA_3D.printSubstate_STDOUT(Q_NEW);
 //
-//
-//	/*--------END CONFIGURATION AND INITIALIZATION PHASE--------*/
-//	CA.globalTransitionFunction();
-//
-//	CA.copyBuffersFromGPU();
-	CA.cleanUpGPUAutomata();
-//	//CA.printSubstate_STDOUT(Q);
-//	//CA.printSubstate_STDOUT(Q_NEW);
-//
-//	if(CA.saveSubstate(Q,"./Q.sst")==ERROR_OPENING_FILE){
+//	if(CA_3D.saveSubstate(Q,"./Q.sst")==ERROR_OPENING_FILE){
 //		printDebug("ERROR SAVING");
 //	}
-//	if(CA.saveSubstate(Q_NEW,"./Q_NEW.sst")==ERROR_OPENING_FILE){
+//	if(CA_3D.saveSubstate(Q_NEW,"./Q_NEW.sst")==ERROR_OPENING_FILE){
 //		printDebug("ERROR SAVING");
 //	}
 //
 //
 //
 //	visualizer->Join();
-	CA.cleanup();
+	CA_3D.cleanup();
 	printf("\nElapsed Time = %.5f \nEND",CA.elapsedTime);
 
 }
@@ -154,7 +154,7 @@ int CA3DMain(int argc, char **argv){
 
 int main(int argc, char **argv) {
 	return CA3DMain(argc,argv);
-
+//CA2DMain(argc,argv);
 	 //CADebug();
 
 
