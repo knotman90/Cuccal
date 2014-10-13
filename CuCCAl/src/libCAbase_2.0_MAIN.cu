@@ -6,7 +6,7 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-#include "CA2D.cuh"
+#include "CA2D/CA2D.cuh"
 #include "CA3D/CA3D.cuh"
 #include "CAGLVisualizer.h"
 #include <pthread.h>

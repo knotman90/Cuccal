@@ -10,7 +10,7 @@
 #ifndef CA_GPU_CUH_
 #define CA_GPU_CUH_
 
-#include "enums.h"
+#include "../enums.h"
 #include <vector_types.h>//cuda dim3 include
 
 struct CA2D;

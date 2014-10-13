@@ -8,12 +8,12 @@
 #ifndef CA_H_
 #define CA_H_
 
-#include "enums.h"
-#include "config.h"
-#include "debugUtilities.h"
-#include "IO_Utils.h"
+#include "../enums.h"
+#include "../config.h"
+#include "../debugUtilities.h"
+#include "../IO_Utils.h"
 #include "CA2D_GPU.cuh"
-#include "memoryLinearizationUtils.cuh"//mod 2/3D to 1D memory layout
+#include "../memoryLinearizationUtils.cuh"//mod 2/3D to 1D memory layout
 
 #include <cassert>
 #include <stdio.h>      /* printf, scanf, NULL */
