@@ -91,7 +91,7 @@ int CA_save_substate_FILE2D(const char* const path, const type* const Q,unsigned
 template <typename type>
 void CA_print_STDOUT3D(const type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim){
 	cout<<"START-----------------"<<endl;
-	for(int k=0;k<yDim;k++){
+	for(int k=0;k<zDim;k++){
 		for(int i=0;i<yDim;i++){
 			for(int j=0;j<xDim;j++){
 				cout<<Q[hd_getLinearIndexNormal3D(i,j,k,yDim,xDim,zDim)]<<" ";
@@ -107,7 +107,7 @@ void CA_print_STDOUT3D(const type* const Q,unsigned int yDim,unsigned int xDim, 
 template <class type>
 void CA_load_substate_FILE3D(fstream& f, type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim)
 {
-	for(int k=0;k<yDim;k++){
+	for(int k=0;k<zDim;k++){
 		for (int i=0; i<yDim; i++){
 			for (int j=0; j<xDim; j++){
 				f >> Q[hd_getLinearIndexNormal3D(i,j,k,yDim,xDim,zDim)];
@@ -137,7 +137,7 @@ template <class type>
 void CA_save_substate_FILE3D(fstream& f, const type* const Q,unsigned int yDim,unsigned int xDim, unsigned int zDim)
 {
 
-	for(int k=0;k<yDim;k++){
+	for(int k=0;k<zDim;k++){
 		for (int i=0; i<yDim; i++) {
 			for (int j=0; j<xDim; j++) {
 				f << Q[hd_getLinearIndexNormal3D(i,j,k,yDim,xDim,zDim)] << " ";

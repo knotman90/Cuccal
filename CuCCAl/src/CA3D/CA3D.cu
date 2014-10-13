@@ -238,7 +238,7 @@ void CA3D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel){
 }
 
 void CA3D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int YDim, unsigned int XDim, unsigned int ZDim){
-	assert(YDim<=yDim && XDim<=xDim );
+	assert(YDim<=yDim && XDim<=xDim && ZDim<=zDim);
 
 	unsigned int type= substateTypes[substateLabel];
 	switch(type){
@@ -509,7 +509,7 @@ void CA3D::globalTransitionFunction(){
 		cleanup();
 		exit(-1);
 	}
-	globalTransitionFunction_MAINLOOP();
+	globalTransitionFunction_MAINLOOP_callback();
 }
 
 void CA3D::registerElementaryProcess( void(*callback)(CA_GPU3D* d_CA ) ){

@@ -104,19 +104,7 @@ CA3D CA_3D(50,50,20,false);
 CThread* visualizer;
 bool* start;
 int CA3DMain(int argc, char **argv){
-	/*--------START CONFIGURATION AND INITIALIZATION PHASE--------*/
-	start= (bool*)malloc(sizeof(bool));
-	*start=0;
-	visualizer= new CAGLVisualizer(argc, argv);
-	((CAGLVisualizer*)visualizer)->setInitializeCallback(initializeVisualizer);
-	((CAGLVisualizer*)visualizer)->setRenderCallBack(displayGOL3D);
-	visualizer->Start();
 
-	while(!*start){
-		printf("waiting\n");
-	}
-
-	free(start);
 	CA_3D.setInitialParameters(2,2);
 	CA_3D.initialize();
 
@@ -127,7 +115,7 @@ int CA3DMain(int argc, char **argv){
 		for(int i=0;i<CA_3D.yDim;i++){
 			for(int j=0;j<CA_3D.xDim;j++){
 				//cout<<"("<<i<<" "<<j<<" "<<k<<": "<<hd_getLinearIndexNormal3D(i,j,k,CA_3D.yDim,CA_3D.xDim,CA_3D.zDim)<<") ";
-				if(rand()%100 < 1){
+				if(rand()%100 < 30){
 					CA_3D.setSubstateValue_BOOL3D(Q,hd_getLinearIndexNormal3D(i,j,k,CA_3D.yDim,CA_3D.xDim,CA_3D.zDim),true);
 				}else{
 					CA_3D.setSubstateValue_BOOL3D(Q,hd_getLinearIndexNormal3D(i,j,k,CA_3D.yDim,CA_3D.xDim,CA_3D.zDim),false);
@@ -172,7 +160,7 @@ int CA3DMain(int argc, char **argv){
 
 
 
-	visualizer->Join();
+
 	CA_3D.cleanup();
 	printf("\nElapsed Time = %.5f \nEND",CA.elapsedTime);
 

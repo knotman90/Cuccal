@@ -591,19 +591,19 @@ void* CA2D::allocateSubstate(TYPE t,void* buffer){
 	switch(t){
 
 	case FLOAT:
-		buffer = (float*)malloc(numCells*sizeof(float));
+		buffer = (float*)calloc(numCells,sizeof(float));
 		break;
 	case DOUBLE:
-		buffer = (double*)malloc(numCells*sizeof(double));
+		buffer = (double*)calloc(numCells,sizeof(double));
 		break;
 	case CHAR:
-		buffer = (char*)malloc(numCells*sizeof(char));
+		buffer = (char*)calloc(numCells,sizeof(char));
 		break;
 	case INT:
-		buffer = (int*)malloc(numCells*sizeof(int));
+		buffer = (int*)calloc(numCells,sizeof(int));
 		break;
 	case BOOL:
-		buffer = (bool*)malloc(numCells*sizeof(bool));
+		buffer = (bool*)calloc(numCells,sizeof(bool));
 		break;
 
 	}

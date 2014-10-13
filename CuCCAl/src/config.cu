@@ -103,8 +103,8 @@ void renderFunction(){
 
 extern CThread* visualizer;
 void callback(unsigned int currentsteps){
-	CA_3D.copyBufferFromGPU(CA_3D.substates[Q],CA_3D.d_subPointer[Q],CA_3D.substateTypes[Q]);
-	glutPostRedisplay();
+	//CA_3D.copyBufferFromGPU(CA_3D.substates[Q],CA_3D.d_subPointer[Q],CA_3D.substateTypes[Q]);
+	//glutPostRedisplay();
 }
 
 
@@ -252,7 +252,7 @@ void __global__ copyBoard3D(CA_GPU3D* d_CA){
 //true means --> STOP THE AUTOMATA
 bool stopCondition3D(){
 
-	if(CA_3D.getSteps()>1000000){
+	if(CA_3D.getSteps()>50){
 		return true;
 	}
 	return false;
