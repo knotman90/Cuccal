@@ -26,6 +26,8 @@
 #define DEFAULT_BLOCKDIM_Y (8)
 #define DEFAULT_BLOCKDIM_Z (8)
 
+#define MOORE_NEIGHBORHOOD (27) //0..26
+
 
 
 struct CA3D{
@@ -91,6 +93,12 @@ struct CA3D{
 	bool checkAutomataStatusBeforeComputation();
 	void globalTransitionFunction_MAINLOOP();
 
+	void globalTransitionFunction_MAINLOOP_callback();
+
+	bool evolveOneStep();
+	//k > 0
+	bool evolveKsteps(unsigned int k);
+
 
 	unsigned int getToroidalLinearIndex(unsigned int linearIndex);
 
@@ -102,36 +110,36 @@ struct CA3D{
 
 	/* START GET SUBSTATE FAMILY FUNCTION*/
 	/*3D COORDINATE FUNCTIONS*/
-	bool getSubstateValue_BOOL(unsigned int substate,unsigned int i, unsigned int j, unsigned int k) const;
-	double getSubstateValue_DOUBLE(unsigned int substate,unsigned int i, unsigned int j, unsigned int k) const;
-	float getSubstateValue_FLOAT(unsigned int substate,unsigned int i, unsigned int j, unsigned int k)const;
-	int getSubstateValue_INT(unsigned int substate,unsigned int i, unsigned int j, unsigned int k)const;
-	char getSubstateValue_CHAR(unsigned int substate,unsigned int i, unsigned int j, unsigned int k)const;
+	bool getSubstateValue_BOOL3D(unsigned int substate,unsigned int i, unsigned int j, unsigned int k) const;
+	double getSubstateValue_DOUBLE3D(unsigned int substate,unsigned int i, unsigned int j, unsigned int k) const;
+	float getSubstateValue_FLOAT3D(unsigned int substate,unsigned int i, unsigned int j, unsigned int k)const;
+	int getSubstateValue_INT3D(unsigned int substate,unsigned int i, unsigned int j, unsigned int k)const;
+	char getSubstateValue_CHAR3D(unsigned int substate,unsigned int i, unsigned int j, unsigned int k)const;
 
 	//-----LINEARIZED COORDINATE FUNCTIONS
 
-	bool getSubstateValue_BOOL(unsigned int substate,unsigned int index) const;
-	double getSubstateValue_DOUBLE(unsigned int substate,unsigned int index) const;
-	float getSubstateValue_FLOAT(unsigned int substate,unsigned int index)const;
-	int getSubstateValue_INT(unsigned int substate,unsigned int index)const;
-	char getSubstateValue_CHAR(unsigned int substate,unsigned int index)const;
+	bool getSubstateValue_BOOL3D(unsigned int substate,unsigned int index) const;
+	double getSubstateValue_DOUBLE3D(unsigned int substate,unsigned int index) const;
+	float getSubstateValue_FLOAT3D(unsigned int substate,unsigned int index)const;
+	int getSubstateValue_INT3D(unsigned int substate,unsigned int index)const;
+	char getSubstateValue_CHAR3D(unsigned int substate,unsigned int index)const;
 
 
 	/* END GET SUBSTATE VALUE FAMILY*/
 
 	/* START SET SUBSTATE FAMILY FUNCTION*/
-	void setSubstateValue3D_BOOL(unsigned int substate,unsigned int i, unsigned int j,unsigned int k,bool const value);
-	void setSubstateValue3D_DOUBLE(unsigned int substate,unsigned int i,unsigned int j,unsigned int k,double const value);
-	void setSubstateValue3D_FLOAT(unsigned int substate,unsigned int i,unsigned int j,unsigned int k, float const value);
-	void setSubstateValue3D_INT(unsigned int substate,unsigned int i,unsigned int j,unsigned int k,int const value);
-	void setSubstateValue3D_CHAR(unsigned int substate,unsigned int i,unsigned int j,unsigned int k,char const value);
+	void setSubstateValue_BOOL3D(unsigned int substate,unsigned int i, unsigned int j,unsigned int k,bool const value);
+	void setSubstateValue_DOUBLE3D(unsigned int substate,unsigned int i,unsigned int j,unsigned int k,double const value);
+	void setSubstateValue_FLOAT3D(unsigned int substate,unsigned int i,unsigned int j,unsigned int k, float const value);
+	void setSubstateValue_INT3D(unsigned int substate,unsigned int i,unsigned int j,unsigned int k,int const value);
+	void setSubstateValue_CHAR3D(unsigned int substate,unsigned int i,unsigned int j,unsigned int k,char const value);
 
 	//LINEARIXED COORDINATE FUNCTIONS
-	void setSubstateValue_BOOL(unsigned int substate,unsigned int index,bool const value);
-	void setSubstateValue_DOUBLE(unsigned int substate,unsigned int index,double const value);
-	void setSubstateValue_FLOAT(unsigned int substate,unsigned int index, float const value);
-	void setSubstateValue_INT(unsigned int substate,unsigned int index,int const value);
-	void setSubstateValue_CHAR(unsigned int substate,unsigned int index,char const value);
+	void setSubstateValue_BOOL3D(unsigned int substate,unsigned int index,bool const value);
+	void setSubstateValue_DOUBLE3D(unsigned int substate,unsigned int index,double const value);
+	void setSubstateValue_FLOAT3D(unsigned int substate,unsigned int index, float const value);
+	void setSubstateValue_INT3D(unsigned int substate,unsigned int index,int const value);
+	void setSubstateValue_CHAR3D(unsigned int substate,unsigned int index,char const value);
 
 
 	/* END set SUBSTATE VALUE FAMILY*/

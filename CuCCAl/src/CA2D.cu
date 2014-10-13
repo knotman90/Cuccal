@@ -445,9 +445,7 @@ bool CA2D::checkAutomataStatusBeforeComputation(){
 }
 
 
-
-
-void CA2D::globalTransitionFunction_MAINLOOP(){
+void CA2D::globalTransitionFunction_MAINLOOP_callback(){
 	clock_t start = clock();
 
 
@@ -477,6 +475,39 @@ void CA2D::globalTransitionFunction_MAINLOOP(){
 			callback(steps);
 
 		}
+
+	}
+
+	/*-----------------------------------------------------------------------------------*/
+	clock_t end = clock();
+	elapsedTime = (double)(end - start) / CLOCKS_PER_SEC;
+	printf("Step performed = %i\nElapsed Time=%.4f\n",steps,elapsedTime);
+
+}
+
+void CA2D::globalTransitionFunction_MAINLOOP(){
+	clock_t start = clock();
+
+
+	/*------------------------------------------------------------------------------*/
+
+	unsigned int k=0;
+	while(!stop){
+		//for each elementary process
+		for(k=0;k<elementaryProcesses_size;k++){
+			//printf("elementaryProcess -> %i\n",k);
+			//loops over all cells of the cellular automata
+
+			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
+			cudaThreadSynchronize();
+
+
+		}
+		//printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+
+		steps=steps+1;
+		printf("Step = %i\n",steps);
+		stop=stopCondition();
 
 	}
 
@@ -774,7 +805,48 @@ void CA2D::preliminaryCAConstructor() {
 
 }
 
+bool CA2D::evolveOneStep() {
+	if(!stop){
+		for(int k=0;k<elementaryProcesses_size;k++){
+			//printf("elementaryProcess -> %i\n",k);
+			//loops over all cells of the cellular automata
 
+			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
+			cudaThreadSynchronize();
+
+
+		}
+		//printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+
+		steps=steps+1;
+		printf("Step = %i\n",steps);
+		stop=stopCondition();
+
+		return true;
+	}
+	return false;
+}
+
+bool CA2D::evolveKsteps(unsigned int k) {
+	for(int i=0;i<k && !stop ;k++){
+
+		for(k=0;k<elementaryProcesses_size;k++){
+			//printf("elementaryProcess -> %i\n",k);
+			//loops over all cells of the cellular automata
+
+			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
+			cudaThreadSynchronize();
+		}
+		//printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+
+		steps=steps+1;
+		printf("Step = %i\n",steps);
+		stop=stopCondition();
+
+		return true;
+	}
+	return false;
+}
 
 void CA2D::setCallback(void(*call)(unsigned int)){
 	this->callback=call;

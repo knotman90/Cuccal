@@ -21,7 +21,7 @@
 
 
 class CAGLVisualizer : public CThread {
-//private:
+	//private:
 	bool initialized;
 	void(*initialize)(int, char**);
 	void(*render)();
@@ -31,7 +31,7 @@ class CAGLVisualizer : public CThread {
 
 
 	bool paused;
-	 void renderMainFunction(){
+	void renderMainFunction(){
 		while(!paused){
 			render();
 		}
@@ -53,6 +53,9 @@ public:
 	static void renderFunction();
 	static void* graphicThreadEntryPoint(void*);
 
+	void redisplay(){
+		glutPostRedisplay();
+	}
 
 	void setInitializeCallback(void(*initGLCallback)(int, char**))
 	{

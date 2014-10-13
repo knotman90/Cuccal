@@ -96,6 +96,11 @@ struct CA2D{
 
 	bool checkAutomataStatusBeforeComputation();
 	void globalTransitionFunction_MAINLOOP();
+	void globalTransitionFunction_MAINLOOP_callback();
+
+	bool evolveOneStep();
+	//k > 0
+	bool evolveKsteps(unsigned int k);
 
 
 	unsigned int getToroidalLinearIndex(unsigned int linearIndex);

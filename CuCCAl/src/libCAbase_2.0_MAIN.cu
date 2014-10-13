@@ -21,6 +21,8 @@ extern bool stopCondition();
 extern void initializeVisualizer(int argc, char** argv);
 extern void renderFunction();
 
+extern void displayGOL3D();
+extern void initGOL3D();
 
 
 //proto functions defined by user in config.cpp for 2D automaton
@@ -41,6 +43,7 @@ int CA2DMain(int argc, char **argv){
 	((CAGLVisualizer*)visualizer)->setRenderCallBack(renderFunction);
 	visualizer->Start();
 
+	initializeVisualizer(argc,argv);
 
 	CA.setInitialParameters(2,2);
 	CA.initialize();
@@ -96,56 +99,80 @@ int CA2DMain(int argc, char **argv){
 }
 
 
-CA3D CA_3D(100,100,100,false);
+
+CA3D CA_3D(50,50,20,false);
+CThread* visualizer;
+bool* start;
 int CA3DMain(int argc, char **argv){
 	/*--------START CONFIGURATION AND INITIALIZATION PHASE--------*/
-//	CThread* visualizer= new CAGLVisualizer(argc, argv);
-//	((CAGLVisualizer*)visualizer)->setInitializeCallback(initializeVisualizer);
-//	((CAGLVisualizer*)visualizer)->setRenderCallBack(renderFunction);
-//	visualizer->Start();
+	start= (bool*)malloc(sizeof(bool));
+	*start=0;
+	visualizer= new CAGLVisualizer(argc, argv);
+	((CAGLVisualizer*)visualizer)->setInitializeCallback(initializeVisualizer);
+	((CAGLVisualizer*)visualizer)->setRenderCallBack(displayGOL3D);
+	visualizer->Start();
 
+	while(!*start){
+		printf("waiting\n");
+	}
 
+	free(start);
 	CA_3D.setInitialParameters(2,2);
 	CA_3D.initialize();
 
 	CA_3D.addSubstate(Q,BOOL);
 	CA_3D.addSubstate(Q_NEW,BOOL);
+	srand(time(0));
+	for(int k=0;k<CA_3D.zDim;k++){
+		for(int i=0;i<CA_3D.yDim;i++){
+			for(int j=0;j<CA_3D.xDim;j++){
+				//cout<<"("<<i<<" "<<j<<" "<<k<<": "<<hd_getLinearIndexNormal3D(i,j,k,CA_3D.yDim,CA_3D.xDim,CA_3D.zDim)<<") ";
+				if(rand()%100 < 1){
+					CA_3D.setSubstateValue_BOOL3D(Q,hd_getLinearIndexNormal3D(i,j,k,CA_3D.yDim,CA_3D.xDim,CA_3D.zDim),true);
+				}else{
+					CA_3D.setSubstateValue_BOOL3D(Q,hd_getLinearIndexNormal3D(i,j,k,CA_3D.yDim,CA_3D.xDim,CA_3D.zDim),false);
+				}
+			}
+			cout<<endl;
+		}
+	}
 
+	if(CA_3D.saveSubstate(Q,"./Q3D_original.sst")==ERROR_OPENING_FILE){
+		printDebug("ERROR SAVING");
+	}
 
 	CA_3D.registerElementaryProcess(gpuEvolve3D);
 	CA_3D.registerElementaryProcess(copyBoard3D);
 	CA_3D.registerStopCondictionCallback(stopCondition3D);
 
-	CA_3D.setBlockDimY(16);
-	CA_3D.setBlockdimX(16);
-	CA_3D.setBlockdimZ(16);
+	CA_3D.setBlockDimY(8);
+	CA_3D.setBlockdimX(8);
+	CA_3D.setBlockdimZ(8);
 
-	CA_3D.setStepsBetweenCopy(1);
+	CA_3D.setStepsBetweenCopy(10);
 	CA_3D.setCallback(callback);
-
-
 
 	CA_3D.initializeGPUAutomata();
 
 
 	/*--------END CONFIGURATION AND INITIALIZATION PHASE--------*/
-//	CA_3D.globalTransitionFunction();
+	CA_3D.globalTransitionFunction();
 
-	//CA_3D.copyBuffersFromGPU();
+	CA_3D.copyBuffersFromGPU();
 	CA_3D.cleanUpGPUAutomata();
 	CA_3D.printSubstate_STDOUT(Q);
-//	//CA_3D.printSubstate_STDOUT(Q_NEW);
-//
-//	if(CA_3D.saveSubstate(Q,"./Q.sst")==ERROR_OPENING_FILE){
-//		printDebug("ERROR SAVING");
-//	}
-//	if(CA_3D.saveSubstate(Q_NEW,"./Q_NEW.sst")==ERROR_OPENING_FILE){
-//		printDebug("ERROR SAVING");
-//	}
-//
-//
-//
-//	visualizer->Join();
+	//CA_3D.printSubstate_STDOUT(Q_NEW);
+
+	if(CA_3D.saveSubstate(Q,"./Q.sst")==ERROR_OPENING_FILE){
+		printDebug("ERROR SAVING");
+	}
+	if(CA_3D.saveSubstate(Q_NEW,"./Q_NEW.sst")==ERROR_OPENING_FILE){
+		printDebug("ERROR SAVING");
+	}
+
+
+
+	visualizer->Join();
 	CA_3D.cleanup();
 	printf("\nElapsed Time = %.5f \nEND",CA.elapsedTime);
 
@@ -154,14 +181,14 @@ int CA3DMain(int argc, char **argv){
 
 int main(int argc, char **argv) {
 	return CA3DMain(argc,argv);
-//CA2DMain(argc,argv);
-	 //CADebug();
+	//CA2DMain(argc,argv);
+	//CADebug();
 
 
 
 
 
-	 printf("EXITING\n");
+	printf("EXITING\n");
 
 	return 0;
 }

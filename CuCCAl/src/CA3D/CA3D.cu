@@ -264,62 +264,62 @@ void CA3D::printSubstate_STDOUT(SUBSTATE_LABEL substateLabel, unsigned int YDim,
 
 
 /* ------------------START GET SUBSTATE FAMILY FUNCTION------------------*/
-bool CA3D::getSubstateValue_BOOL(unsigned int substateLabel,unsigned int i, unsigned int j, unsigned int k) const{
+bool CA3D::getSubstateValue_BOOL3D(unsigned int substateLabel,unsigned int i, unsigned int j, unsigned int k) const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==BOOL);
 	return ((bool*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)];
 }
 
-double CA3D::getSubstateValue_DOUBLE(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
+double CA3D::getSubstateValue_DOUBLE3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==DOUBLE);
 	return ((double*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)];
 }
 
-float CA3D::getSubstateValue_FLOAT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
+float CA3D::getSubstateValue_FLOAT3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==FLOAT);
 	return ((float*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)];
 }
 
-int CA3D::getSubstateValue_INT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
+int CA3D::getSubstateValue_INT3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==INT);
 	return ((int*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)];
 }
 
-char CA3D::getSubstateValue_CHAR(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
+char CA3D::getSubstateValue_CHAR3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==CHAR);
 	return ((char*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)];
 }
 
 //mono index cell representation
-bool CA3D::getSubstateValue_BOOL(unsigned int substateLabel,unsigned int index) const{
+bool CA3D::getSubstateValue_BOOL3D(unsigned int substateLabel,unsigned int index) const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==BOOL);
 	return ((bool*)substates[substateLabel])[index];
 }
 
-double CA3D::getSubstateValue_DOUBLE(unsigned int substateLabel,unsigned int index)const{
+double CA3D::getSubstateValue_DOUBLE3D(unsigned int substateLabel,unsigned int index)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==DOUBLE);
 	return ((double*)substates[substateLabel])[index];
 }
 
-float CA3D::getSubstateValue_FLOAT(unsigned int substateLabel,unsigned int index)const{
+float CA3D::getSubstateValue_FLOAT3D(unsigned int substateLabel,unsigned int index)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==FLOAT);
 	return ((float*)substates[substateLabel])[index];
 }
 
-int CA3D::getSubstateValue_INT(unsigned int substateLabel,unsigned int index)const{
+int CA3D::getSubstateValue_INT3D(unsigned int substateLabel,unsigned int index)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==INT);
 	return ((int*)substates[substateLabel])[index];
 }
 
-char CA3D::getSubstateValue_CHAR(unsigned int substateLabel,unsigned int index)const{
+char CA3D::getSubstateValue_CHAR3D(unsigned int substateLabel,unsigned int index)const{
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==CHAR);
 	return ((char*)substates[substateLabel])[index];
@@ -332,62 +332,62 @@ char CA3D::getSubstateValue_CHAR(unsigned int substateLabel,unsigned int index)c
 
 
 /* ----------------START SET SUBSTATE FAMILY FUNCTION ------------------*/
-void CA3D::setSubstateValue3D_BOOL(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,bool const value) {
+void CA3D::setSubstateValue_BOOL3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,bool const value) {
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==BOOL);
 	((bool*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)]=value;
 }
 
-void CA3D::setSubstateValue3D_DOUBLE(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k, double const value){
+void CA3D::setSubstateValue_DOUBLE3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k, double const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==DOUBLE);
 	((double*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)]=value;
 }
 
-void CA3D::setSubstateValue3D_FLOAT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,float const value){
+void CA3D::setSubstateValue_FLOAT3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,float const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==FLOAT);
 	((float*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)]=value;
 }
 
-void CA3D::setSubstateValue3D_INT(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,int const value){
+void CA3D::setSubstateValue_INT3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,int const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==INT);
 	((int*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)]=value;
 }
 
-void CA3D::setSubstateValue3D_CHAR(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,char const value){
+void CA3D::setSubstateValue_CHAR3D(unsigned int substateLabel,unsigned int i, unsigned int j,unsigned int k,char const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==CHAR);
 	((char*)substates[substateLabel])[getLinearIndex(i,j,k,yDim,xDim,zDim)]=value;
 }
 
 
-void CA3D::setSubstateValue_BOOL(unsigned int substateLabel,unsigned int index,bool const value) {
+void CA3D::setSubstateValue_BOOL3D(unsigned int substateLabel,unsigned int index,bool const value) {
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==BOOL);
 	((bool*)substates[substateLabel])[index]=value;
 }
 
-void CA3D::setSubstateValue_DOUBLE(unsigned int substateLabel,unsigned int index, double const value){
+void CA3D::setSubstateValue_DOUBLE3D(unsigned int substateLabel,unsigned int index, double const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==DOUBLE);
 	((double*)substates[substateLabel])[index]=value;
 }
 
-void CA3D::setSubstateValue_FLOAT(unsigned int substateLabel,unsigned int index,float const value){
+void CA3D::setSubstateValue_FLOAT3D(unsigned int substateLabel,unsigned int index,float const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==FLOAT);
 	((float*)substates[substateLabel])[index]=value;
 }
 
-void CA3D::setSubstateValue_INT(unsigned int substateLabel,unsigned int index,int const value){
+void CA3D::setSubstateValue_INT3D(unsigned int substateLabel,unsigned int index,int const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==INT);
 	((int*)substates[substateLabel])[index]=value;
 }
 
-void CA3D::setSubstateValue_CHAR(unsigned int substateLabel,unsigned int index,char const value){
+void CA3D::setSubstateValue_CHAR3D(unsigned int substateLabel,unsigned int index,char const value){
 	assert(substateLabel<=substate_count);
 	assert(substateTypes[substateLabel]==CHAR);
 	((char*)substates[substateLabel])[index]=value;
@@ -426,9 +426,7 @@ bool CA3D::checkAutomataStatusBeforeComputation(){
 }
 
 
-
-
-void CA3D::globalTransitionFunction_MAINLOOP(){
+void CA3D::globalTransitionFunction_MAINLOOP_callback(){
 	clock_t start = clock();
 
 
@@ -467,6 +465,43 @@ void CA3D::globalTransitionFunction_MAINLOOP(){
 	printf("Step performed = %i\nElapsed Time=%.4f\n",steps,elapsedTime);
 
 }
+
+void CA3D::globalTransitionFunction_MAINLOOP(){
+	clock_t start = clock();
+
+
+	/*------------------------------------------------------------------------------*/
+
+	unsigned int k=0;
+	while(!stop){
+		//for each elementary process
+		for(k=0;k<elementaryProcesses_size;k++){
+			//printf("elementaryProcess -> %i\n",k);
+			//loops over all cells of the cellular automata
+
+			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
+			cudaThreadSynchronize();
+
+
+		}
+		printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+
+		steps=steps+1;
+		printf("Step = %i\n",steps);
+		stop=stopCondition();
+
+
+	}
+
+	/*-----------------------------------------------------------------------------------*/
+	clock_t end = clock();
+	elapsedTime = (double)(end - start) / CLOCKS_PER_SEC;
+	printf("Step performed = %i\nElapsed Time=%.4f\n",steps,elapsedTime);
+
+}
+
+
+
 
 void CA3D::globalTransitionFunction(){
 	if(!checkAutomataStatusBeforeComputation()){
@@ -511,8 +546,10 @@ void CA3D::cleanup(){
 	unsigned int i=0;
 	//free all the allocated substates
 	for(;i<substate_count;i++){
-		free(substates[i]);
-		printDebug("FREED");
+		if(substates[i]!=0){
+			free(substates[i]);
+			printDebug("FREED");
+		}
 	}
 
 	//free(elementaryProcesses);//it is allocated on GPU
@@ -869,6 +906,51 @@ CA3D::CA3D(int YDim,int XDim,int ZDim,bool toroidal){
 
 }
 
+
+
+
+bool CA3D::evolveOneStep() {
+	if(!stop){
+		for(int k=0;k<elementaryProcesses_size;k++){
+			//printf("elementaryProcess -> %i\n",k);
+			//loops over all cells of the cellular automata
+
+			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
+			cudaThreadSynchronize();
+
+
+		}
+		//printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+
+		steps=steps+1;
+		printf("Step = %i\n",steps);
+		stop=stopCondition();
+
+		return true;
+	}
+	return false;
+}
+
+bool CA3D::evolveKsteps(unsigned int k) {
+	for(int i=0;i<k && !stop ;k++){
+
+		for(k=0;k<elementaryProcesses_size;k++){
+			//printf("elementaryProcess -> %i\n",k);
+			//loops over all cells of the cellular automata
+
+			(elementaryProcesses[k])<<<dimGrid,blockDim>>>(d_CA);
+			cudaThreadSynchronize();
+		}
+		//printf("DIMGRID(%i,%i,%i), BlockDim(%i,%i,%i)\n",dimGrid.x,dimGrid.y,dimGrid.z,blockDim.x,blockDim.y,blockDim.z);
+
+		steps=steps+1;
+		printf("Step = %i\n",steps);
+		stop=stopCondition();
+
+		return true;
+	}
+	return false;
+}
 
 void CA3D::setCallback(void(*call)(unsigned int)){
 	this->callback=call;
